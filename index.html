@@ -1,9 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Track your everyday spending.">
     <title>Budget Tracker</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
@@ -11,50 +12,45 @@
 <body>
     <main class="container">
         <header class="page-header">
-            <div class="logo">BT</div>
+            <div class="logo" aria-hidden="true">BT</div>
             <div>
                 <h1>Budget Tracker</h1>
                 <p>Keep track of your everyday spending.</p>
             </div>
         </header>
 
-        <section class="summary">
+        <section class="summary" aria-label="Summary">
             <article class="summary-card">
-                <p>Total Spending</p>
-                <h2>$<span id="total">0.00</span></h2>
+                <p>Total spending</p>
+                <h2 id="total">$0.00</h2>
             </article>
-
             <article class="summary-card">
-                <p>Total Expenses</p>
-                <h2><span id="count">0</span></h2>
+                <p>Expenses</p>
+                <h2 id="count">0</h2>
             </article>
         </section>
 
-        <section class="card">
-            <h2 id="formTitle">Add an Expense</h2>
+        <section class="card" id="breakdownCard" hidden>
+            <h2>By category</h2>
+            <ul id="breakdown" class="breakdown"></ul>
+        </section>
 
-            <form id="expenseForm">
+        <section class="card">
+            <h2 id="formTitle">Add an expense</h2>
+
+            <form id="expenseForm" novalidate>
                 <div class="form-group">
-                    <label for="expense">Expense Name</label>
-                    <input
-                        type="text"
-                        id="expense"
-                        placeholder="e.g. Groceries"
-                        maxlength="100"
-                        required
-                    >
+                    <label for="expense">Expense name</label>
+                    <input type="text" id="expense" placeholder="e.g. Groceries"
+                           maxlength="100" autocomplete="off" required>
+                    <small class="error" id="expenseError" role="alert"></small>
                 </div>
 
                 <div class="form-group">
                     <label for="amount">Amount ($)</label>
-                    <input
-                        type="number"
-                        id="amount"
-                        placeholder="e.g. 25.50"
-                        min="0.01"
-                        step="0.01"
-                        required
-                    >
+                    <input type="number" id="amount" placeholder="e.g. 25.50"
+                           min="0.01" max="1000000" step="0.01" inputmode="decimal" required>
+                    <small class="error" id="amountError" role="alert"></small>
                 </div>
 
                 <div class="form-group">
@@ -67,26 +63,18 @@
                         <option value="Utilities">Utilities</option>
                         <option value="Other">Other</option>
                     </select>
+                    <small class="error" id="categoryError" role="alert"></small>
                 </div>
 
                 <div class="form-group">
-                    <label for="expenseDate">Expense Date</label>
+                    <label for="expenseDate">Date</label>
                     <input type="date" id="expenseDate" required>
+                    <small class="error" id="dateError" role="alert"></small>
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" id="submitBtn" class="primary-btn">
-                        Add Expense
-                    </button>
-
-                    <button
-                        type="button"
-                        id="cancelEditBtn"
-                        class="secondary-btn"
-                        hidden
-                    >
-                        Cancel
-                    </button>
+                    <button type="submit" id="submitBtn" class="primary-btn">Add expense</button>
+                    <button type="button" id="cancelEditBtn" class="secondary-btn" hidden>Cancel</button>
                 </div>
             </form>
         </section>
@@ -94,28 +82,43 @@
         <section class="card">
             <div class="list-header">
                 <div>
-                    <h2>Your Expenses</h2>
+                    <h2>Your expenses</h2>
                     <p class="section-description">Review and manage your spending.</p>
                 </div>
 
-                <div class="filter-group">
-                    <label for="filterCategory">Filter</label>
-                    <select id="filterCategory">
-                        <option value="All">All Categories</option>
-                        <option value="Food">Food</option>
-                        <option value="Transport">Transport</option>
-                        <option value="Entertainment">Entertainment</option>
-                        <option value="Utilities">Utilities</option>
-                        <option value="Other">Other</option>
-                    </select>
+                <div class="list-controls">
+                    <div class="filter-group">
+                        <label for="filterCategory">Filter</label>
+                        <select id="filterCategory">
+                            <option value="All">All categories</option>
+                            <option value="Food">Food</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Utilities">Utilities</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="sortBy">Sort</label>
+                        <select id="sortBy">
+                            <option value="date-desc">Newest first</option>
+                            <option value="date-asc">Oldest first</option>
+                            <option value="amount-desc">Highest amount</option>
+                            <option value="amount-asc">Lowest amount</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            <ul id="expenseList" class="expense-list"></ul>
+            <ul id="expenseList" class="expense-list" aria-live="polite"></ul>
 
             <p id="emptyMessage" class="empty-message">
                 No expenses yet. Add your first expense above.
             </p>
+
+            <div class="list-footer" id="listFooter" hidden>
+                <button type="button" id="clearBtn" class="danger-btn">Clear all expenses</button>
+            </div>
         </section>
 
         <footer>
