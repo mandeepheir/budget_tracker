@@ -1,48 +1,144 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Budget Tracker</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Track your expenses, manage spending, and organize your budget.">
+    <title>Budget Tracker | Personal Finance</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <div class="container">
+    <main class="container">
 
-        <h1>Budget Tracker</h1>
+        <header class="app-header">
+            <div class="logo-icon">$
+            </div>
 
-        <input type="text" id="expense" placeholder="Enter the expense">
+            <div>
+                <h1>Budget Tracker</h1>
+                <p class="subtitle">Manage your money with confidence.</p>
+            </div>
+        </header>
 
-        <input type="number" id="amount" placeholder="Enter the amount">
+        <section class="summary-grid" aria-label="Expense summary">
 
-        <select id="category">
-            <option value="">Select Category</option>
-            <option value="Food">Food</option>
-            <option value="Transport">Transport</option>
-            <option value="Entertainment">Entertainment</option>
-            <option value="Utilities">Utilities</option>
-            <option value="Other">Other</option>
-        </select>
+            <article class="summary-card total-card">
+                <p class="summary-label">Total Spending</p>
+                <h2>$<span id="total">0.00</span></h2>
+                <p class="summary-description">Across all expenses</p>
+            </article>
 
-        <select id="filterCategory" onchange="filterExpenses()">
-            <option value="All">All Categories</option>
-            <option value="Food">Food</option>
-            <option value="Transport">Transport</option>
-            <option value="Entertainment">Entertainment</option>
-            <option value="Utilities">Utilities</option>
-            <option value="Other">Other</option>
-        </select>
+            <article class="summary-card count-card">
+                <p class="summary-label">Total Expenses</p>
+                <h2 id="count">0</h2>
+                <p class="summary-description">Recorded transactions</p>
+            </article>
 
-        <button onclick="AddExpense()">ADD Expense</button>
+        </section>
 
-        <ul id="expenseList"></ul>
+        <section class="panel">
+            <div class="section-heading">
+                <div>
+                    <h2>Add an Expense</h2>
+                    <p>Enter the details of your transaction.</p>
+                </div>
+            </div>
 
-        <h2>Total: $<span id="total">0</span></h2>
+            <form id="expenseForm" onsubmit="event.preventDefault(); AddExpense();">
 
-        <h3>Total Expenses: <span id="count">0</span></h3>
+                <div class="form-group">
+                    <label for="expense">Expense Name</label>
+                    <input
+                        type="text"
+                        id="expense"
+                        placeholder="e.g. Grocery shopping"
+                        maxlength="100"
+                        required
+                    >
+                </div>
 
-    </div>
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="amount">Amount ($)</label>
+                        <input
+                            type="number"
+                            id="amount"
+                            placeholder="0.00"
+                            min="0.01"
+                            step="0.01"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select id="category" required>
+                            <option value="">Select category</option>
+                            <option value="Food">Food</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Utilities">Utilities</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="primary-btn" id="submitBtn">
+                        Add Expense
+                    </button>
+
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        id="cancelEditBtn"
+                        hidden
+                        onclick="cancelEdit()"
+                    >
+                        Cancel
+                    </button>
+                </div>
+
+            </form>
+        </section>
+
+        <section class="panel expenses-panel">
+
+            <div class="expenses-heading">
+                <div>
+                    <h2>Your Expenses</h2>
+                    <p>Review and manage your transactions.</p>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filterCategory">Filter:</label>
+
+                    <select id="filterCategory" onchange="filterExpenses()">
+                        <option value="All">All Categories</option>
+                        <option value="Food">Food</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <ul id="expenseList" class="expense-list" aria-live="polite"></ul>
+
+        </section>
+
+        <footer class="app-footer">
+            <p>Budget Tracker · Take control of your spending.</p>
+        </footer>
+
+    </main>
 
     <script src="script.js"></script>
 
